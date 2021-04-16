@@ -1,0 +1,53 @@
+FUNCTION_BLOCK Attack
+
+	(* Three input variables for each variable in the minotaur class. *)
+	VAR_INPUT
+	 health : REAL; (* Range 0-100 *)
+	 stamina : REAL; (* Range 0-100 *)
+	 rage : REAL; (* Range 0-100 *)
+	END_VAR
+	
+	(* This variable decide whether or not the minotaur should attack the player *)
+	VAR_OUTPUT
+	 attack : REAL; (* Range 0-100 *)
+	END_VAR
+	
+	(* Three fuzzy sets for each input variable was adequate *)
+	FUZZIFY health
+	 TERM low := (0, 1) (20, 1) (50, 0) ; 
+  	 TERM medium := (20, 0) (50, 1) (80, 0);
+  	 TERM high := (50, 0) (80, 1) (100,1);
+	END_FUZZIFY
+	FUZZIFY stamina
+	 TERM low := (0, 1) (20, 1) (50, 0) ; 
+  	 TERM medium := (20, 0) (50, 1) (80, 0);
+  	 TERM high := (50, 0) (80, 1) (100,1);
+	END_FUZZIFY
+	FUZZIFY rage
+	 TERM low := (0, 1) (20, 1) (50, 0) ; 
+  	 TERM medium := (20, 0) (50, 1) (80, 0);
+  	 TERM high := (50, 0) (80, 1) (100,1);
+	END_FUZZIFY
+	
+	DEFUZZIFY attack
+	 TERM bad := (0, 1) (20, 1) (50, 0) ; 
+  	 TERM good := (20, 0) (50, 1) (80, 0);
+  	 TERM great := (50, 0) (80, 1) (100,1);
+	 METHOD : COG;
+	 DEFAULT := 0;
+	END_DEFUZZIFY
+	
+	RULEBLOCK No1
+	 AND : MIN;
+	 ACT : MIN;
+	 ACCU : MAX;
+	 RULE 1 : IF health IS low AND stamina IS low AND rage IS low THEN attack IS bad;
+	 RULE 2 : IF health IS low AND stamina IS low THEN attack IS bad;
+	 RULE 3 : IF health IS high AND stamina IS low THEN attack IS bad;
+	 RULE 4 : IF health IS medium AND stamina IS medium AND rage IS medium THEN attack IS good;
+	 RULE 5 : IF health IS medium AND stamina IS high AND rage IS high THEN attack IS good;
+	 RULE 7 : IF health IS high AND stamina IS high AND rage IS high THEN attack IS great;
+	 RULE 8 : IF health IS high AND stamina IS high THEN attack IS great;
+	END_RULEBLOCK
+	
+END_FUNCTION_BLOCK

@@ -1,0 +1,1 @@
+java --module-path .;./jars/javafx-sdk-11.0.2/lib;./jars/encog-core-3.4.jar/;./jars/jFuzzyLogic.jar --module gmit.software/ie.gmit.sw.ai.Runner
